@@ -1,3 +1,4 @@
+import path from "node:path";
 import express, { type Express, type Request, type RequestHandler } from "express";
 import helmet from "helmet";
 import cors from "cors";
@@ -544,6 +545,15 @@ export function createApp(options: CreateAppOptions = {}): Express {
   // where `:hash` is 32 hex chars of sha256(content)) — membership is the
   // only thing that reveals the URL in the first place. This is a documented
   // exception to the X-Server-Id contract added in #proj-security task #10.
+  // Same public-derived-asset semantics as the upstream thumbnail CDN, with
+  // a narrow path allowlist. Never expose the uploads directory itself.
+  if (process.env.UPLOADS_LOCAL === "true") {
+    app.get(/^\/api\/local-content\/thumbs\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.webp$/, (req, res) => {
+      const key = req.path.slice("/api/local-content/".length);
+      res.setHeader("Cache-Control", "public, max-age=86400");
+      res.sendFile(key, { root: path.resolve(process.env.UPLOADS_DIR || "uploads"), dotfiles: "deny" });
+    });
+  }
   app.use("/api/avatars", agentAvatarRouter);
   app.use("/api/external-avatars", externalAvatarPublicRouter);
   app.use("/api/integration-logos", integrationLogoPublicRouter);

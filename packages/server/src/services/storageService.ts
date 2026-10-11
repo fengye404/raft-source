@@ -344,7 +344,14 @@ export function resolvePublicAssetUrl(key: string | null | undefined): string | 
   const base = generation === "v2"
     ? getPublicContentBaseUrl()
     : normalizePublicBaseUrl(process.env.CDN_BASE_URL);
-  return base ? `${base}/${key}` : null;
+  if (base) return `${base}/${key}`;
+  // Local disk deployments have no CDN. Only derived thumbnails belong here;
+  // originals continue to use the authenticated attachment download route.
+  if (generation === "legacy" && process.env.UPLOADS_LOCAL === "true" && /^thumbs\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.webp$/.test(key)) {
+    const origin = normalizePublicBaseUrl(process.env.SERVER_URL);
+    return origin ? `${origin}/api/local-content/${key}` : null;
+  }
+  return null;
 }
 
 export class UnknownPublicContentStorageRouteError extends Error {
