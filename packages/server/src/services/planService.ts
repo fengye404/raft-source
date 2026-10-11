@@ -1,3 +1,5 @@
+import { isSelfHosted, getSelfHostedLimits } from "../config/selfHosted";
+import { getRuntimePlanLimits as getEffectiveLimits } from "../config/selfHosted";
 import { createHash } from "node:crypto";
 import { eq, and, isNull, sql, inArray, ne } from "drizzle-orm";
 import { getDb, type DatabaseExecutor, type DatabaseTransaction } from "../db/index";
@@ -11,7 +13,6 @@ import {
   getBillingCapacity,
   getBillingCapacityLimitState,
   getBillingUsage,
-  getEffectiveLimits,
   type BillingCapacity,
   type BillingEntitlementProjection,
   type BillingUsage,
@@ -110,7 +111,7 @@ function projectServerBillingEntitlement(
   return {
     ...projection,
     source: hasEntitlingSubscription && !hasInternalEntitlement ? "subscription" : "server",
-    capacity: getBillingCapacity(projection, now),
+    capacity: isSelfHosted() ? { maxHumans: getSelfHostedLimits().maxHumans, maxAgents: getSelfHostedLimits().maxAgents, maxUniversalSeats: -1 } : getBillingCapacity(projection, now),
   };
 }
 
@@ -243,6 +244,7 @@ export async function requireTeamBillingFeature(
   featureName: string,
   now: Date = new Date(),
 ): Promise<void> {
+  if (isSelfHosted()) return;
   await refreshSubscriptionBeforeEntitlementGate(serverId, now);
   const entitlement = await getServerBillingEntitlement(executor, serverId, now);
   if (!canUseProBillingFeatures(entitlement.plan, now)) {

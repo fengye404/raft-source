@@ -1,3 +1,4 @@
+import { isSelfHosted, getSelfHostedLimits } from "../config/selfHosted";
 import Stripe from "stripe";
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { and, eq, isNull, lt } from "drizzle-orm";
@@ -88,7 +89,7 @@ function isStripeBillingFlagEnabled(): boolean {
 
 /** Returns true if Stripe billing is explicitly enabled and all required env vars are set. */
 export function isStripeConfigured(): boolean {
-  return isStripeBillingFlagEnabled() && REQUIRED_STRIPE_BILLING_ENV.every((key) => !!process.env[key]?.trim());
+  return !isSelfHosted() && isStripeBillingFlagEnabled() && REQUIRED_STRIPE_BILLING_ENV.every((key) => !!process.env[key]?.trim());
 }
 
 const PASSIVE_SUBSCRIPTION_REFRESH_MS = 6 * 60 * 60 * 1000;
@@ -126,7 +127,7 @@ export async function getBillingSummary(serverId: string) {
     ...traceStripeBillingState(),
   });
   const db = getDb();
-  await refreshSubscriptionForServer(serverId);
+  if (!isSelfHosted()) await refreshSubscriptionForServer(serverId);
   const { getFileUploadQuotaSummary } = await import("./fileUploadQuotaService");
   const [server] = await db
     .select({ plan: servers.plan })
@@ -142,6 +143,8 @@ export async function getBillingSummary(serverId: string) {
   const isInternalUnlimitedPlan = entitlement.plan === "founder" || entitlement.plan === "partner";
 
   const summary = {
+    selfHosted: isSelfHosted(),
+    selfHostedLimits: isSelfHosted() ? getSelfHostedLimits() : null,
     plan: entitlement.plan,
     displayName: PLAN_CONFIG[entitlement.plan].displayName,
     serverPlan: server?.plan ?? "free",

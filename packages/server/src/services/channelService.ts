@@ -1,3 +1,4 @@
+import { getRuntimePlanLimits as getEffectiveLimits } from "../config/selfHosted";
 import { revokeSocketAccess } from "../socket/accessRevocation";
 import { createHash, randomInt, randomUUID } from "crypto";
 import { performance } from "node:perf_hooks";
@@ -32,7 +33,7 @@ import { acquireServerLock, assertGuestJoinableChannelCapacityAvailable, GUEST_J
 import { assertJointAdmission, freeServerIds, reconcileJointOverLimit, reconcileJointOverLimitFor, refreshJointEntitlementsBeforeAdmission } from "./jointChannelLimitService";
 import { getJointLimitStatesForJoints, resolveParentJointId } from "./jointChannelLimitState";
 export { GuestJoinableChannelLimitError } from "./planService";
-import { MAX_JOINT_CHANNEL_SERVERS, PLAN_CONFIG, channelTypeSupportsActivityMute, currentDate, currentTimeMs, formatInboxScopeCorruptionLine, getEffectiveLimits, makeInboxScopeReadFrontier, type AgentActivity, type InboxScopeCursorCorruption, type InboxScopeReadFrontier, type ServerId, type ServerPlan, type TraceAttributes, type TrajectoryEntry, CHANNEL_MANAGEMENT_CAPABILITIES, canAddChannelMembers, canGuestJoinChannel, canGuestPostToChannel, canGuestReadChannel, getChannelAdminBasis, hasEffectiveChannelCapability, type ChannelRole, type ServerRole } from "@botiverse/raft-shared";
+import { MAX_JOINT_CHANNEL_SERVERS, PLAN_CONFIG, channelTypeSupportsActivityMute, currentDate, currentTimeMs, formatInboxScopeCorruptionLine, makeInboxScopeReadFrontier, type AgentActivity, type InboxScopeCursorCorruption, type InboxScopeReadFrontier, type ServerId, type ServerPlan, type TraceAttributes, type TrajectoryEntry, CHANNEL_MANAGEMENT_CAPABILITIES, canAddChannelMembers, canGuestJoinChannel, canGuestPostToChannel, canGuestReadChannel, getChannelAdminBasis, hasEffectiveChannelCapability, type ChannelRole, type ServerRole } from "@botiverse/raft-shared";
 import { formatDmPeerRef, parseDmPeerRef, type DmPeerKind } from "@botiverse/raft-shared";
 import { DmTargetResolutionError } from "./dmTargetResolutionError";
 import { untracedDbQuery, type DbQueryTracer } from "../tracing/dbQueryTrace";

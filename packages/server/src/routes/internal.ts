@@ -1,3 +1,4 @@
+import { getRuntimePlanLimits as getEffectiveLimits } from "../config/selfHosted";
 import { respondToTaskWriteError } from "../lib/taskWriteErrorResponse";
 import { serializeErrorForLog } from "../tracing/safeErrorLog";
 // LEGACY AGENT API SURFACE: DO NOT ADD OR EXPAND ROUTES HERE.
@@ -66,7 +67,6 @@ import {
   buildApmFreshnessDecisionProducerFactId,
   projectApmHeldFreshnessActivity,
   projectApmHeldFreshnessEnvelope,
-  getEffectiveLimits,
   getServerCapabilities,
   renderThirdPartyInertText,
   isReminderStatus,

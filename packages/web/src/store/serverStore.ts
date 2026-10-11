@@ -177,6 +177,8 @@ export interface BillingInfo {
     agentSeatBlockQuantity: number;
   } | null;
   subscription: SubscriptionInfo | null;
+  selfHosted?: boolean;
+  selfHostedLimits?: Record<string, number> | null;
   stripeConfigured: boolean;
   permissions: {
     canReadBillingSummary: boolean;

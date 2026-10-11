@@ -1,7 +1,8 @@
+import { getRuntimePlanLimits as getEffectiveLimits } from "../config/selfHosted";
 import { eq, and, isNotNull, isNull, ne, lt, asc } from "drizzle-orm";
 import { getDb } from "../db/index";
 import { servers, agents } from "../db/schema";
-import { PLAN_CONFIG, DOWNGRADE_GRACE_PERIOD_DAYS, getEffectiveLimits, noopTracer, type Tracer } from "@botiverse/raft-shared";
+import { PLAN_CONFIG, DOWNGRADE_GRACE_PERIOD_DAYS, noopTracer, type Tracer } from "@botiverse/raft-shared";
 import { errorClassOf, getCurrentTraceContext, recordTraceEvent, runWithTraceSpan } from "../tracing/semanticTrace";
 import type { AgentOrchestrator } from "./agentOrchestrator";
 

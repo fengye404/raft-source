@@ -1,3 +1,4 @@
+import { getRuntimePlanLimits as getEffectiveLimits } from "../config/selfHosted";
 import { createHash } from "crypto";
 import { isDeepStrictEqual } from "node:util";
 import { eq, and, inArray, isNull, isNotNull, sql, asc, ne } from "drizzle-orm";
@@ -5,7 +6,7 @@ import { getDb, withDbTraceAttributes, type DatabaseExecutor, type DatabaseTrans
 import { actorRoleHasServerCapability } from "../lib/actorPermissions";
 import { FencedAuthorizationDeniedError, ServerMembershipRevokedError } from "../lib/actorMembershipFence";
 import { agents, machines, channels, channelAgents, servers, serverMembers, serverAgentMembers, users, agentRuntimeProfiles, messages, tasks, taskEvents, agentProviderConnections, providerConnections, providerConnectionCredentials } from "../db/schema";
-import { ALL_CHANNEL_TEAM_THRESHOLD, EXTERNAL_AGENT_RUNTIME_ID, PLAN_CONFIG, currentDate, getEffectiveLimits, type AgentRuntimeErrorState, type AgentStatus, type ServerPlan, type ReasoningEffort, type RuntimeConfig, getDefaultModel, isExternalAgentRuntime, validateAgentName, type ServerRole } from "@botiverse/raft-shared";
+import { ALL_CHANNEL_TEAM_THRESHOLD, EXTERNAL_AGENT_RUNTIME_ID, PLAN_CONFIG, currentDate, type AgentRuntimeErrorState, type AgentStatus, type ServerPlan, type ReasoningEffort, type RuntimeConfig, getDefaultModel, isExternalAgentRuntime, validateAgentName, type ServerRole } from "@botiverse/raft-shared";
 import { assertAgentCapacityAvailable, getServerBillingEntitlement, getServerBillingUsage, withAgentCreateLock } from "./planService";
 import { untracedDbQuery, type DbQueryTracer } from "../tracing/dbQueryTrace";
 import { assertAgentHandleAvailableInServer, lockServerPrincipalHandles, PrincipalHandleConflictError } from "./principalHandleService";

@@ -1,3 +1,4 @@
+import { isSelfHosted, getSelfHostedLimits } from "../config/selfHosted";
 import { Router, type NextFunction, type Request, type Response, type Router as RouterType } from "express";
 import { UUID_RE } from "../lib/messageId";
 import {
@@ -234,6 +235,7 @@ export function buildAttachmentTooLargeResponse(limitBytes = MAX_ATTACHMENT_FILE
 }
 
 export async function resolveRequestAttachmentFileSizeLimitBytes(req: Request): Promise<number> {
+  if (isSelfHosted()) { const n = getSelfHostedLimits().singleUploadBytes; return n === -1 ? Number.MAX_SAFE_INTEGER - 1048576 : n; }
   const serverId = req.serverId;
   if (!serverId) return MAX_ATTACHMENT_FILE_SIZE_BYTES;
   const quota = await getFileUploadQuotaSummary(serverId);
@@ -241,6 +243,7 @@ export async function resolveRequestAttachmentFileSizeLimitBytes(req: Request): 
 }
 
 async function resolveRequestLegacyAttachmentFileSizeLimitBytes(req: Request): Promise<number> {
+  if (isSelfHosted()) { const n = getSelfHostedLimits().singleUploadBytes; return n === -1 ? Number.MAX_SAFE_INTEGER - 1048576 : n; }
   const serverId = req.serverId;
   if (!serverId) return MAX_ATTACHMENT_FILE_SIZE_BYTES;
   const quota = await getFileUploadQuotaSummary(serverId);

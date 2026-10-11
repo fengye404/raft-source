@@ -17,7 +17,7 @@ COPY packages/web/package.json packages/web/
 
 # Install dependencies (skip Electron binary download — not needed for web)
 ENV ELECTRON_SKIP_BINARY_DOWNLOAD=1
-RUN pnpm install --frozen-lockfile
+RUN NODE_USE_ENV_PROXY=1 pnpm install --frozen-lockfile
 
 # Copy source
 COPY packages/desktop-contract/ packages/desktop-contract/

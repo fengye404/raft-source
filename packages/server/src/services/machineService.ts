@@ -1,3 +1,4 @@
+import { getRuntimePlanLimits as getEffectiveLimits } from "../config/selfHosted";
 import { eq, and, inArray, isNotNull, isNull, lt, or, sql, asc } from "drizzle-orm";
 import { createHash, randomBytes } from "node:crypto";
 import argon2 from "argon2";
@@ -6,7 +7,7 @@ import { computers, machines, servers, agents, agentMigrations, agentRuntimeProf
 import { withServerLock, acquireServerLock } from "./planService";
 import { FencedAuthorizationDeniedError, lockActorMembershipRow } from "../lib/actorMembershipFence";
 import { actorRoleHasServerCapability } from "../lib/actorPermissions";
-import { PLAN_CONFIG, currentDate, getEffectiveLimits, type MachineId, type ServerPlan } from "@botiverse/raft-shared";
+import { PLAN_CONFIG, currentDate, type MachineId, type ServerPlan } from "@botiverse/raft-shared";
 import { untracedDbQuery, type DbQueryTracer } from "../tracing/dbQueryTrace";
 
 /** Extract a short prefix from an API key for indexed DB lookup. */

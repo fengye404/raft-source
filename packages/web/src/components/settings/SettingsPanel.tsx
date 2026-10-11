@@ -4291,6 +4291,24 @@ export function PlanSection() {
     }
   };
 
+  if (billing?.selfHosted) {
+    const labels: Record<string, string> = {
+      messageHistoryDays: "消息历史（天）", monthlyUploadBytes: "每月上传总量",
+      maxHumans: "成员数", maxAgents: "Agent 数", maxMachines: "计算机数",
+      maxChannels: "频道数", maxGuestJoinableChannelsPerServer: "访客可加入频道数",
+      singleUploadBytes: "单文件大小",
+    };
+    return <div className="mb-6">
+      <SectionHeader className="mb-3" icon={<CreditCard size={16} />} label="自托管 · 资源限制" />
+      <p className="mb-4">此实例由你自行部署，无需购买 Raft 套餐。以下为管理员配置的限制。</p>
+      <dl>{Object.entries(billing.selfHostedLimits ?? {}).map(([key, value]) =>
+        <div key={key} className="flex justify-between border-b py-3">
+          <dt>{labels[key] ?? key}</dt><dd>{value === -1 ? "不限" : key.endsWith("Bytes") ? formatBytes(value) : value}</dd>
+        </div>)}</dl>
+      <p className="mt-4 text-sm">不设套餐额度不代表资源无限；实际容量取决于服务器磁盘、内存及入口限制。</p>
+    </div>;
+  }
+
   return (
     <div className="mb-6">
       <SectionHeader

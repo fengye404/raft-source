@@ -1,4 +1,7 @@
 export function getRegistrationBlockedReason(): string | null {
+  if (process.env.RAFT_DISABLE_REGISTRATION === "true") {
+    return "New account registration is disabled on this private instance.";
+  }
   return null;
 }
 
