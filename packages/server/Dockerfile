@@ -49,7 +49,7 @@ COPY packages/server/package.json packages/server/
 
 # Install all dependencies (@oxc-node/core loads TypeScript source at runtime)
 ENV ELECTRON_SKIP_BINARY_DOWNLOAD=1
-RUN pnpm install --frozen-lockfile
+RUN NODE_USE_ENV_PROXY=1 pnpm install --frozen-lockfile
 
 # Copy source
 COPY packages/sync-core/ packages/sync-core/

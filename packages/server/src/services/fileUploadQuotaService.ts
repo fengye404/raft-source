@@ -1,3 +1,4 @@
+import { isSelfHosted, getSelfHostedLimits } from "../config/selfHosted";
 import { and, eq, sql } from "drizzle-orm";
 import { FREE_MONTHLY_FILE_UPLOAD_LIMIT_BYTES, canUseProBillingFeatures, currentDate, type ServerPlan } from "@botiverse/raft-shared";
 import type { DatabaseTransaction } from "../db/index";
@@ -93,10 +94,10 @@ async function getUsageBytes(tx: DatabaseTransaction, serverId: string, month: s
   };
 }
 
-function summarize(plan: ServerPlan, month: string, usedBytes: number, reservedBytes = 0, now = new Date()): FileUploadQuotaSummary {
-  const limited = plan === "free";
-  const enforced = limited && !canUseProBillingFeatures(plan, now);
-  const limitBytes = limited ? FREE_MONTHLY_FILE_UPLOAD_LIMIT_BYTES : -1;
+export function summarizeFileUploadQuota(plan: ServerPlan, month: string, usedBytes: number, reservedBytes = 0, now = new Date()): FileUploadQuotaSummary {
+  const limitBytes = isSelfHosted() ? getSelfHostedLimits().monthlyUploadBytes : plan === "free" ? FREE_MONTHLY_FILE_UPLOAD_LIMIT_BYTES : -1;
+  const limited = limitBytes !== -1;
+  const enforced = limited && (isSelfHosted() || !canUseProBillingFeatures(plan, now));
   return {
     month,
     plan,
@@ -124,7 +125,7 @@ export async function getFileUploadQuotaSummary(serverId: string, now = new Date
       eq(serverFileUploadUsageMonths.serverId, serverId),
       eq(serverFileUploadUsageMonths.month, month),
     ));
-  return summarize(entitlement.plan, month, row?.usedBytes ?? 0, row?.reservedBytes ?? 0, now);
+  return summarizeFileUploadQuota(entitlement.plan, month, row?.usedBytes ?? 0, row?.reservedBytes ?? 0, now);
 }
 
 export async function reserveFileUploadQuotaForSession<T>(
@@ -139,7 +140,7 @@ export async function reserveFileUploadQuotaForSession<T>(
   return withServerResourceLock(serverId, FILE_UPLOAD_QUOTA_LOCK_NAMESPACE, month, async (tx) => {
     const entitlement = await getServerBillingEntitlement(tx, serverId);
     const usage = await getUsageBytes(tx, serverId, month);
-    const summary = summarize(entitlement.plan, month, usage.usedBytes, usage.reservedBytes, now);
+    const summary = summarizeFileUploadQuota(entitlement.plan, month, usage.usedBytes, usage.reservedBytes, now);
 
     if (summary.enforced && safeRequestedBytes > summary.remainingBytes) {
       throw new FileUploadQuotaExceededError(summary, safeRequestedBytes);

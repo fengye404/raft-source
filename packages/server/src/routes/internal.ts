@@ -1,3 +1,4 @@
+import { getRuntimePlanLimits as getEffectiveLimits } from "../config/selfHosted";
 import { respondToTaskWriteError } from "../lib/taskWriteErrorResponse";
 import { serializeErrorForLog } from "../tracing/safeErrorLog";
 import { refuseIfRemindersMovedToApp } from "./reminderAppRollout";
@@ -67,7 +68,6 @@ import {
   buildApmFreshnessDecisionProducerFactId,
   projectApmHeldFreshnessActivity,
   projectApmHeldFreshnessEnvelope,
-  getEffectiveLimits,
   getServerCapabilities,
   renderThirdPartyInertText,
   isSlackBridgedExternalProvider,
