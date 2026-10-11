@@ -38,3 +38,19 @@ test("history and upload enforcement honor self-host settings", async () => {
   vi.stubEnv("RAFT_LIMIT_MONTHLY_UPLOAD_BYTES", "0");
   expect(summarizeFileUploadQuota("free", "2099-01", 0)).toMatchObject({ enforced: true, remainingBytes: 0 });
 });
+
+
+test("local thumbnail URLs exclude original files and unsupported namespaces", async () => {
+  const { resolvePublicAssetUrl } = await import("../services/storageService");
+  vi.stubEnv("UPLOADS_LOCAL", "true");
+  vi.stubEnv("CDN_BASE_URL", "");
+  vi.stubEnv("PUBLIC_CONTENT_BASE_URL", "");
+  vi.stubEnv("SERVER_URL", "https://api.example.test");
+  const key = "thumbs/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222.webp";
+  expect(resolvePublicAssetUrl(key)).toBe(`https://api.example.test/api/local-content/${key}`);
+  expect(resolvePublicAssetUrl("private/file.pdf")).toBeNull();
+  expect(resolvePublicAssetUrl("thumbs/../../private/file.pdf")).toBeNull();
+  expect(resolvePublicAssetUrl(`content/v2/${key}`)).toBeNull();
+  vi.stubEnv("UPLOADS_LOCAL", "false");
+  expect(resolvePublicAssetUrl(key)).toBeNull();
+});
