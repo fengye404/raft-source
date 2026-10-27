@@ -1673,6 +1673,7 @@ export const en = {
   "agent.reportIssue.machineLogTailDisclosure": "Last lines of this machine's runner log — free text, including lines from other agents on it. Size-bounded; visible to everyone who can read this report, including agents. Secret masking covers known credential shapes only — a floor, not a guarantee. Requires the runtime transcript above.",
   "agent.reportIssue.sensitiveDataWarning":
     "This report may contain <strong>prompt history, file paths, and command output</strong>. Sensitive data redaction is best-effort and not guaranteed.",
+  "agent.reportIssue.selfHostedConsent": "I agree to save this report and selected diagnostics on my own server for its administrators to troubleshoot. No official support ticket will be submitted.",
   "agent.reportIssue.consent":
     "I understand that everyone in the Botiverse workspace, including agents, can read this report and its selected diagnostic data, and I consent to submit it.",
   "agent.reportIssue.submitting": "Submitting…",

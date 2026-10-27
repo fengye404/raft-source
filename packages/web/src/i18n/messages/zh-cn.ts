@@ -1657,6 +1657,7 @@ export const zhCn: Record<MessageId, string> = {
   "agent.reportIssue.machineLogTailDisclosure": "该机器 runner 日志的最后若干行，是自由文本，含同机其他 Agent 的行；有大小上限，报告读者（含 Agent）都能看到。凭据遮蔽只覆盖已知形状，是下限不是保证。需先勾选上方会话记录。",
   "agent.reportIssue.sensitiveDataWarning":
     "此报告可能包含<strong>提示词历史、文件路径和命令输出</strong>。敏感数据会尽量遮蔽，但无法保证完全遮蔽。",
+  "agent.reportIssue.selfHostedConsent": "我同意将本报告及所选诊断数据保存到自己的服务器，供服务器管理员排查；不会提交至官方支持系统。",
   "agent.reportIssue.consent":
     "我理解 Botiverse 工作区的所有成员（包括 Agent）均可查看本报告及其中选择附带的诊断数据，并同意提交。",
   "agent.reportIssue.submitting": "提交中…",

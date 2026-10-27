@@ -689,7 +689,7 @@ export default function ReportIssueDialog({
               onCheckedChange={handleConsentedChange}
               disabled={loading}
             />
-            <span className="text-callout font-semibold">{formatMessage({ id: "agent.reportIssue.consent" })}</span>
+            <span className="text-callout font-semibold">{formatMessage({ id: SELF_HOSTED_REPORTS ? "agent.reportIssue.selfHostedConsent" : "agent.reportIssue.consent" })}</span>
           </label>
         </Banner>
 
