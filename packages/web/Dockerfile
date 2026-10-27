@@ -28,6 +28,10 @@ COPY packages/visual-testing/shared/ packages/visual-testing/shared/
 COPY packages/web/ packages/web/
 
 # Build web app — VITE_* values are baked in at build time
+ARG VITE_FEEDBACK_EXPORT_URL=""
+ARG VITE_SELF_HOSTED_REPORTS="false"
+ENV VITE_FEEDBACK_EXPORT_URL=$VITE_FEEDBACK_EXPORT_URL
+ENV VITE_SELF_HOSTED_REPORTS=$VITE_SELF_HOSTED_REPORTS
 ARG VITE_API_URL
 ARG VITE_COMMIT_SHA=""
 ARG VITE_BUILD_AT=""

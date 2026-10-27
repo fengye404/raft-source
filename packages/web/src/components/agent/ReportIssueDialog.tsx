@@ -31,6 +31,7 @@ interface ReportIssueDialogProps {
 }
 
 const FEEDBACK_EXPORT_URL = import.meta.env?.VITE_FEEDBACK_EXPORT_URL?.replace(/\/+$/, "") || "";
+const SELF_HOSTED_REPORTS = import.meta.env.VITE_SELF_HOSTED_REPORTS === "true";
 const VERSION_ENV = import.meta.env ?? {};
 const FEEDBACK_APP_VERSION = [
   WEB_APP_VERSION,
@@ -427,7 +428,7 @@ export default function ReportIssueDialog({
         // The same react-intl locale that formatted agentTitle above.
         locale,
       };
-      const ticketId = await fileTicket(ticketRequest);
+      const ticketId = SELF_HOSTED_REPORTS ? null : await fileTicket(ticketRequest);
 
       setSubmittedReport({
         reportId: report.id,
@@ -516,14 +517,14 @@ export default function ReportIssueDialog({
             <div className="text-center">
               <p className="text-subhead font-bold text-foreground">{formatMessage({ id: "agent.reportIssue.uploaded" })}</p>
               <p className="mt-1 text-callout text-foreground-muted">
-                {formatMessage({ id: submittedReport?.ticketId ? "agent.reportIssue.ticketFiled" : "agent.reportIssue.uploadedDescription" })}
+                {formatMessage({ id: SELF_HOSTED_REPORTS ? "agent.reportIssue.savedLocally" : submittedReport?.ticketId ? "agent.reportIssue.ticketFiled" : "agent.reportIssue.uploadedDescription" })}
               </p>
             </div>
             {submittedReport && !submittedReport.ticketId && (
               <Card className="block w-full p-3 text-left">
-                <Banner intent="warning" density="sm" className="mb-3" role="alert">
+                {!SELF_HOSTED_REPORTS && <Banner intent="warning" density="sm" className="mb-3" role="alert">
                   {formatMessage({ id: "agent.reportIssue.ticketFailed" })}
-                </Banner>
+                </Banner>}
                 <SectionEyebrow as="div" className="mb-1">{formatMessage({ id: "agent.reportIssue.reportReference" })}</SectionEyebrow>
                 <dl className="space-y-1">
                   <div>
@@ -543,7 +544,7 @@ export default function ReportIssueDialog({
                 >
                   {formatMessage({ id: reportRefCopied ? "agent.reportIssue.copied" : "agent.reportIssue.copyReference" })}
                 </Button>
-                <Button size="sm"
+                {!SELF_HOSTED_REPORTS && <Button size="sm"
                   variant="outline"
                   type="button"
                   onClick={handleRetryTicket}
@@ -551,7 +552,7 @@ export default function ReportIssueDialog({
                   className="mt-3 ml-2"
                 >
                   {formatMessage({ id: ticketRetrying ? "agent.reportIssue.retryingTicket" : "agent.reportIssue.retryTicket" })}
-                </Button>
+                </Button>}
               </Card>
             )}
             {submittedReport?.transcriptAttachmentRequested && transcriptRequestState && (

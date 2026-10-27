@@ -1635,6 +1635,7 @@ export const en = {
   "agent.reportIssue.finalizeFeedbackFailed": "Failed to finalize feedback report",
   "agent.reportIssue.submitFailed": "Failed to submit issue report",
   "agent.reportIssue.submittedTitle": "Report Submitted",
+  "agent.reportIssue.savedLocally": "Saved to your own server. Copy the report reference for troubleshooting; no official support ticket was created.",
   "agent.reportIssue.uploaded": "Feedback export uploaded.",
   "agent.reportIssue.uploadedDescription": "The bundle includes the issue description plus the client-side context you selected.",
   "agent.reportIssue.reportReference": "Report reference",

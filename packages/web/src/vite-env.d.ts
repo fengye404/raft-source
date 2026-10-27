@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly VITE_ENABLE_SHARE_TO_X?: string;
   readonly VITE_ENABLE_REACT_SCAN?: string;
   readonly VITE_FEEDBACK_EXPORT_URL?: string;
+  readonly VITE_SELF_HOSTED_REPORTS?: string;
   readonly VITE_SLOCKDEV_ENV_NAME?: string;
   readonly VITE_SLOCKDEV_EMAIL?: string;
   readonly VITE_SLOCKDEV_PREVIEW_DESCRIPTION?: string;

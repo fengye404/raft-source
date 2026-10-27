@@ -1620,6 +1620,7 @@ export const zhCn: Record<MessageId, string> = {
   "agent.reportIssue.finalizeFeedbackFailed": "完成反馈报告失败",
   "agent.reportIssue.submitFailed": "提交问题报告失败",
   "agent.reportIssue.submittedTitle": "报告已提交",
+  "agent.reportIssue.savedLocally": "已保存到自己的服务器。可复制报告编号用于排查；不会向官方提交工单。",
   "agent.reportIssue.uploaded": "反馈导出已上传。",
   "agent.reportIssue.uploadedDescription": "报告包包含问题描述，以及你选择的客户端上下文。",
   "agent.reportIssue.reportReference": "报告引用",
