@@ -3968,6 +3968,7 @@ export function PlanSection() {
   }
 
   if (billing?.selfHosted) {
+    const formatBytes = (value: number) => value >= 1024 ** 3 ? `${(value / 1024 ** 3).toFixed(1)} GiB` : `${Math.round(value / 1024 ** 2)} MiB`;
     const labels: Record<string, string> = {
       messageHistoryDays: "消息历史（天）", monthlyUploadBytes: "每月上传总量",
       maxHumans: "成员数", maxAgents: "Agent 数", maxMachines: "计算机数",
